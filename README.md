@@ -1,11 +1,11 @@
-[![Docker Build Status](https://img.shields.io/docker/build/cexiolabs/freeton-validator?label=Status)](https://hub.docker.com/r/cexiolabs/freeton-validator/builds)
-[![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/cexiolabs/freeton-validator?label=Size)](https://hub.docker.com/r/cexiolabs/freeton-validator/tags)
-[![Docker Pulls](https://img.shields.io/docker/pulls/cexiolabs/freeton-validator?label=Pulls)](https://hub.docker.com/r/cexiolabs/freeton-validator)
-[![Docker Image Version (latest by date)](https://img.shields.io/docker/v/cexiolabs/freeton-validator?sort=semver&label=Version)](https://hub.docker.com/r/cexiolabs/freeton-validator/tags)
-[![Docker Image Info](https://images.microbadger.com/badges/image/cexiolabs/freeton-validator.svg)](https://hub.docker.com/r/cexiolabs/freeton-validator/dockerfile)
-[![Ton Blockchain Commit Ref](https://images.microbadger.com/badges/commit/cexiolabs/freeton-validator.svg)](https://github.com/ton-blockchain/ton)
+[![Docker Build Status](https://img.shields.io/docker/build/cexiolabs/freeton-node?label=Status)](https://hub.docker.com/r/cexiolabs/freeton-node/builds)
+[![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/cexiolabs/freeton-node?label=Size)](https://hub.docker.com/r/cexiolabs/freeton-node/tags)
+[![Docker Pulls](https://img.shields.io/docker/pulls/cexiolabs/freeton-node?label=Pulls)](https://hub.docker.com/r/cexiolabs/freeton-node)
+[![Docker Image Version (latest by date)](https://img.shields.io/docker/v/cexiolabs/freeton-node?sort=semver&label=Version)](https://hub.docker.com/r/cexiolabs/freeton-node/tags)
+[![Docker Image Info](https://images.microbadger.com/badges/image/cexiolabs/freeton-node.svg)](https://hub.docker.com/r/cexiolabs/freeton-node/dockerfile)
+[![Ton Blockchain Commit Ref](https://images.microbadger.com/badges/commit/cexiolabs/freeton-node.svg)](https://github.com/ton-blockchain/ton)
 
-# Free TON Validator
+# Free TON Node
 TON (Telegram Open Network) use the principle «Proof of Stake». This requires the use of masternodes. Third-party developers (validators) are owners of Masternodes.
 
 This image was made especially for launch [Free TON Network](https://freeton.org/).
@@ -32,13 +32,13 @@ of Decentralization](https://freeton.org/dod)
 1. Fetch latest version of the image
 
 	```bash
-	docker pull cexiolabs/freeton-validator
+	docker pull cexiolabs/freeton-node
 	```
 
 1. Start a container
 
 	```bash
-	docker run --name freeton-validator --interactive --tty --network host --mount type=bind,source=/ton/etc,target=/etc/ton --mount type=bind,source=/ton/db,target=/var/ton cexiolabs/freeton-validator
+	docker run --name freeton-node --interactive --tty --network host --mount type=bind,source=/ton/etc,target=/etc/ton --mount type=bind,source=/ton/db,target=/var/ton cexiolabs/freeton-node
 	```
 
 	On first launch the container will enter into setup mode, due your directories `/ton/etc` and `/ton/db` are empty. Let answer for a few questions:
@@ -68,14 +68,14 @@ of Decentralization](https://freeton.org/dod)
 
 	Enter ADNL port [30310]: 
 
-	Launching validator-engine to generate instance configuration...
+	Launching node to generate instance configuration...
 	[ 3][t 1][1589413681.457912922][validator-engine.cpp:1160][!validator-engine]   no init block in config. using zero state
 	[ 1][t 1][1589413681.465116262][validator-engine.cpp:1445][!validator-engine]   created config file '/var/ton/config.json'
 	[ 1][t 1][1589413681.465180159][validator-engine.cpp:1446][!validator-engine]   check it manually before continue
 
 	Generating keys for server, liteserver and client(validator-engine-console)...
 
-	Starting Validator Engine...
+	Starting Node...
 	[ 3][t 1][1589413681.505045414][validator-engine.cpp:1160][!validator-engine]   no init block in config. using zero state
 	[ 3][t 1][1589413681.536607504][manager.cpp:1429][!manager]     failed to load blocks from import dir: [PosixError : No such file or directory : 2 : File "/var/ton/import" can't be opened for reading]
 	[ 3][t 4][1589413681.584379911][manager-init.cpp:35][!reiniter] init_block_id=[ w=-1 s=9223372036854775808 seq=0 ...
@@ -84,10 +84,10 @@ of Decentralization](https://freeton.org/dod)
 
 1. Check status
 
-	NOTE: Validator Engine need some time to start synchronization. Be patient :)
+	NOTE: Node need some time to start synchronization. Be patient :)
 
 	```bash
-	docker exec --interactive --tty freeton-validator validator-engine-console --address 127.0.0.1:3030 --key /etc/ton/keys/client --pub /etc/ton/keys/server.pub -c "getstats" -c "quit"
+	docker exec --interactive --tty freeton-node validator-engine-console --address 127.0.0.1:3030 --key /etc/ton/keys/client --pub /etc/ton/keys/server.pub -c "getstats" -c "quit"
 	```
 
 	Expected result:
@@ -130,8 +130,8 @@ of Decentralization](https://freeton.org/dod)
 It is possible to improve node perfomance if you build an image for your CPU (instead `x86-64`) by providing TON_ARCH build argument. See [GCC Options](https://gcc.gnu.org/onlinedocs/gcc-9.2.0/gcc/x86-Options.html#x86-Options) and choose correct one value `cpu-type`. If you hard to determine correct `cpu-type` just use `native`.
 
 ```bash
-git clone https://github.com/cexiolabs/contrib.freeton.validator-docker.git freeton-validator-docker
-cd freeton-validator-docker
+git clone https://github.com/cexiolabs/contrib.freeton.node-docker.git freeton-node-docker
+cd freeton-node-docker
 docker build --tag cexiolabs/freeton-validator --build-arg TON_ARCH=native --file docker/alpine/Dockerfile .
 ```
 
@@ -147,5 +147,5 @@ Build variables (pass as --build-arg):
 
 The image includes [ton-blockchain/ton](https://github.com/ton-blockchain/ton) utils like `generate-random-id`. You may use it just pass as arguments, like:
 ``` bash
-docker run --rm cexiolabs/freeton-validator generate-random-id --mode keys
+docker run --rm cexiolabs/freeton-node generate-random-id --mode keys
 ```
