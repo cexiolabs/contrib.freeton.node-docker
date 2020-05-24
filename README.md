@@ -2,13 +2,24 @@
 [![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/cexiolabs/freeton-node?label=Size)](https://hub.docker.com/r/cexiolabs/freeton-node/tags)
 [![Docker Pulls](https://img.shields.io/docker/pulls/cexiolabs/freeton-node?label=Pulls)](https://hub.docker.com/r/cexiolabs/freeton-node)
 [![Docker Image Version (latest by date)](https://img.shields.io/docker/v/cexiolabs/freeton-node?sort=semver&label=Version)](https://hub.docker.com/r/cexiolabs/freeton-node/tags)
-[![Docker Image Info](https://images.microbadger.com/badges/image/cexiolabs/freeton-node.svg)](https://hub.docker.com/r/cexiolabs/freeton-node/dockerfile)
-[![Ton Blockchain Commit Ref](https://images.microbadger.com/badges/commit/cexiolabs/freeton-node.svg)](https://github.com/ton-blockchain/ton)
 
 # Free TON Node
 TON (Telegram Open Network) use the principle «Proof of Stake». This requires the use of masternodes. Third-party developers (validators) are owners of Masternodes.
 
 This image was made especially for launch [Free TON Network](https://freeton.org/).
+
+## Why this image?
+This image allows you to start your our TON Validator in few minutes, instead hours of compiling, configuring, long manuals reading...
+
+## Roadmap
+* [x] Autobuild TON node sources - base of the image
+* [x] Minimal installer script - configure a node at first launch
+* [ ] Container Status Page - local node monitoring
+* [ ] Extented installer script - ability to set (initialize) wallet at first launch
+* [ ] Wallet creation guideline - newcomer friendly guide in English and Russian
+* [ ] Expose metrics for Prometeus - external node monitoring
+* [ ] Make sub-image with Validator script
+
 
 ## Quick Reference
 * [Free TON Community](https://freeton.org/)
@@ -22,12 +33,23 @@ of Decentralization](https://freeton.org/dod)
 
 ## Quick Start
 
+1. Create your Wallet (one time operation). Read our guideline about this step [English](TBD), [Russian](TBD).
+
 1. Docker Host check list:
 
 	* [ ] - Empty directory for global configuration, let's say `/ton/etc`
 	* [ ] - Empty directory for TON database, let's say `/ton/db`
 	
 	According [recommendations](https://github.com/tonlabs/main.ton.dev/) you need 1000 GB (prefer SSD) for the database directory.
+
+1. Stop/Delete previous container (if you have it already)
+
+	NOTE: The image was written to be stateless. Means, a container save all necessary data inside attached volumes. So, it is safe to delete last one.
+
+	```bash
+	docker stop freeton-node
+	docker rm freeton-node
+	```
 
 1. Fetch latest version of the image
 
@@ -132,7 +154,7 @@ It is possible to improve node perfomance if you build an image for your CPU (in
 ```bash
 git clone https://github.com/cexiolabs/contrib.freeton.node-docker.git freeton-node-docker
 cd freeton-node-docker
-docker build --tag cexiolabs/freeton-validator --build-arg TON_ARCH=native --file docker/alpine/Dockerfile .
+docker build --tag cexiolabs/freeton-node --build-arg TON_ARCH=native --file docker/alpine/Dockerfile .
 ```
 
 Build variables (pass as --build-arg):
